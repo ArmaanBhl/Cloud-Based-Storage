@@ -1,0 +1,363 @@
+/* General Profile Page Styling */
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: #f9fafc;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    display: flex;
+    justify-content: center;
+}
+
+
+/* Profile container */
+.profile-container {
+    display: flex;
+    padding: 20px;
+    width: 100%;
+    max-width: 1200px;
+    gap: 20px;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th {
+    padding: 12px;
+    text-align: left; /* Ensure left-alignment of header */
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.file-info {
+    width: 30%;
+}
+
+/* Default (not starred) */
+.star-icon {
+    font-size: 1.5rem;
+    color: gray;
+    transition: color 0.3s ease;
+    cursor: pointer;
+}
+
+.star-btn {
+    background: none; /* Remove button background */
+    border: none; /* Remove button border */
+    padding: 0; /* Remove extra padding */
+    margin: 0; /* Remove any margin */
+    cursor: pointer; /* Change cursor to pointer for interactivity */
+}
+
+.star-icon.starred {
+    color: gold; /* Gold color for starred */
+}
+
+.starred-btn{
+    display: block;
+    width: 100%;
+    padding: 10px;
+    color: white !important; /* White text */
+    text-align: center;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    text-decoration: none;
+    margin-bottom: 10px; /* Spacing from Logout button */
+}
+
+.btn-trash {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    color: white !important; /* White text */
+    text-align: center;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    text-decoration: none;
+    margin-bottom: 10px; /* Spacing from Logout button */
+}
+
+/* Actions Button */
+.actions-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #457b9d;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.actions-btn:hover {
+    background-color: #1d3557;
+}
+
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    min-width: 150px;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-item {
+    padding: 10px 15px;
+    display: block;
+    text-decoration: none;
+    color: #333;
+}
+
+.dropdown-item:hover {
+    background-color: #f2f2f2;
+}
+
+.dropdown-item button {
+    all: unset;
+    cursor: pointer;
+    color: #333;
+}
+
+.dropdown-item button:hover {
+    color: red;
+}
+
+
+/* Dropdown Styling */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.actions-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #007bff; /* Primary blue color */
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.actions-btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.actions-btn.delete-btn {
+    background-color: #dc3545; /* Red background for delete */
+}
+
+.actions-btn.delete-btn:hover {
+    background-color: #c82333; /* Darker red for hover effect */
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    min-width: 150px;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-item {
+    padding: 10px 15px;
+    display: block;
+    text-decoration: none;
+    color: #333;
+}
+
+.dropdown-item:hover {
+    background-color: #f2f2f2;
+}
+
+.dropdown-item button {
+    all: unset;
+    cursor: pointer;
+    color: #333;
+}
+
+.dropdown-item button:hover {
+    color: red;
+}
+
+/* Rename Button Styling */
+.rename-btn {
+    all: unset;
+    cursor: pointer;
+    color: #333;
+    text-decoration: none;
+    display: block;
+    padding: 10px 15px;
+}
+
+.rename-btn:hover {
+    background-color: #f2f2f2;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    width: 280px;
+    padding: 20px;
+    background-color: #1d3557;
+    color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.sidebar h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: #f1faee;
+    text-align: center;
+}
+
+.sidebar a {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    text-align: center;
+    background-color: #457b9d;
+    color: #fff;
+    border-radius: 6px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar a:hover {
+    background-color: #a8dadc;
+    color: #1d3557;
+}
+
+.sidebar .btn-logout {
+    background-color: #e63946;
+}
+
+
+.sidebar .btn-logout:hover {
+    background-color: #d62828;
+}
+
+/* Main content area */
+.main-content {
+    flex-grow: 1;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Search Bar */
+.search-bar {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.search-bar input[type="text"] {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.search-bar button {
+    padding: 10px 20px;
+    background-color: #457b9d;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-bar button:hover {
+    background-color: #1d3557;
+}
+
+.filter-container {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#filter-options {
+    padding: 8px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+button {
+    padding: 8px 16px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #e9ecef;
+}
+
+th {
+    background-color: #f1f3f5;
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: #f8f9fa;
+}
+
+.file-info {
+    width: 30%;
+}

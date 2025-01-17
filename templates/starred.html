@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starred Files</title>
+    <link rel="stylesheet" href="/static/profile.css?v=1.0.3">
+</head>
+<body>
+
+    <div class="profile-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>Welcome, {{ session['username'] if 'username' in session else 'Guest' }}</h2>
+            <a href="{{ url_for('profile', user_id=session['user_id']) }}" class="btn-home">Home</a>
+            <a href="/trash" class="btn btn-trash">Trash</a>
+            <a href="/logout" class="btn btn-logout">Logout</a> 
+            <p><strong>Storage Used:</strong> {{ used_storage }} MB / {{ max_storage }} MB</p>
+        </div>
+   
+
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <h2>Your Starred Files</h2>
+
+        <!-- Files Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>Last Modified</th>
+                    <th>File Size</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if files %}
+                    {% for file in files %}
+                        <tr class="file-row">
+                            <td class="file-info">{{ file.filename }}</td>
+                            <td class="file-info">{{ file.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                            <td class="file-info">
+                            <!-- Starred button -->
+                            <button type="button" class="star-btn" data-file-id="{{ file.id }}" onclick="toggleStarred(event)">
+                                <!-- Add 'starred' class dynamically based on the file's status -->
+                                <span class="star-icon {{ 'starred' if file.starred else '' }}">&#9733;</span>
+                            </button>
+                            
+
+
+                                {{ (file.size / 1024) | round(2) }} KB
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="actions-btn">Actions</button>
+                                    <div class="dropdown-menu">
+                                        <!-- Download -->
+                                        <a href="{{ url_for('download_file', filename=file.filename) }}" class="dropdown-item" download="{{ file.filename }}">Download</a>
+                                        <!-- Rename -->
+                                        <button type="button" class="dropdown-item actions-btn rename-btn" 
+                                            data-file-id="{{ file.id }}" 
+                                            data-current-filename="{{ file.filename }}">
+                                          Rename
+                                         </button>
+                                        <!-- Delete -->
+                                        <form action="{{ url_for('delete_file', file_id=file.id) }}" method="POST" class="dropdown-item">
+                                            <button type="submit" onclick="return confirm('Are you sure you want to delete this file?')">Trash</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="4">No files found.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Rename Modal -->
+<div id="renameModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeRenameModal()">&times;</span>
+        <h2>Rename File</h2>
+        <form action="{{ url_for('rename_file') }}" method="POST">
+            <input type="hidden" id="fileId" name="file_id">
+            <label for="newFilename">New File Name:</label>
+            <input type="text" id="newFilename" name="new_filename" required>
+            <button type="submit" class="btn">Rename</button>
+        </form>
+    </div>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const renameButtons = document.querySelectorAll('.rename-btn');
+    renameButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const fileId = button.dataset.fileId;
+            const currentFilename = button.dataset.currentFilename;
+
+            const modal = document.getElementById('renameModal');
+            modal.style.display = 'block';  // Show the modal
+
+            const fileIdInput = document.getElementById('fileId');
+            const filenameInput = document.getElementById('newFilename');
+
+            fileIdInput.value = fileId;
+            filenameInput.value = currentFilename;
+        });
+    });
+
+    // Close Rename Modal
+    const closeRenameModal = () => {
+        const modal = document.getElementById('renameModal');
+        modal.style.display = 'none';  // Hide the modal
+    };
+
+    // Close Modal on Clicking Outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('renameModal');
+        if (event.target === modal) {
+            closeRenameModal();
+        }
+    };
+
+    // Expose close function globally for easier access in inline HTML onclick
+    window.closeRenameModal = closeRenameModal;
+
+    // Dropdown Handling
+    const actionsButtons = document.querySelectorAll('.actions-btn');
+    actionsButtons.forEach(button => {
+        button.addEventListener('click', (event) => {
+            event.stopPropagation(); // Prevent propagation
+            const dropdown = button.nextElementSibling;
+
+            // Close other dropdowns
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                if (menu !== dropdown) {
+                    menu.classList.remove('show');
+                }
+            });
+
+            // Toggle dropdown visibility
+            dropdown.classList.toggle('show');
+        });
+    });
+
+    // Close Dropdowns When Clicking Outside
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.dropdown-menu').forEach(menu => {
+            menu.classList.remove('show');
+        });
+    });
+});
+
+function toggleStarred(event) {
+    const button = event.target.closest('button');
+    const fileId = button.dataset.fileId;
+    const starIcon = button.querySelector('.star-icon');
+
+    // Remove the file immediately from the Starred view
+    button.closest('tr').remove();  // Remove the entire row (assuming it's in a table)
+
+    // Send AJAX request to update the server
+    fetch(`/toggle_starred/${fileId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            starred: false, // We want to unstar it immediately
+        }),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (!data.success) {
+                alert('Failed to update the starred status.');
+            }
+        })
+        .catch(() => {
+            alert('An error occurred. Please try again.');
+        });
+}
+
+
+</script>
+
+</body>
+</html>

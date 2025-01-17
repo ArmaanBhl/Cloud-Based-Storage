@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trash</title>
+    <link rel="stylesheet" href="/static/profile.css">
+    <style>
+        /* Style for the Home Button */
+        .btn-home {
+            display: block;
+            width: 100%;
+            background-color: #28a745; /* Green background */
+            color: #fff; /* White text */
+            text-align: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .btn-home:hover {
+            background-color: #218838; /* Darker green for hover effect */
+        }
+    </style>
+</head>
+<body>
+
+<div class="profile-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Welcome, {{ session['username'] if 'username' in session else 'Guest' }}</h2>
+        <a href="{{ url_for('profile', user_id=session['user_id']) }}" class="btn-home">Home</a>
+        <a href="/logout" class="btn btn-logout">Logout</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h2>Trash</h2>
+
+        <!-- Deleted Files Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>Deleted At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if files %}
+                    {% for file in files %}
+                    <tr class="file-row">
+                        <td class="file-info">{{ file.filename }}</td>
+                        <td class="file-info">{{ file.deleted_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>
+                            <div class="actions-container">
+                                <form action="{{ url_for('recover_file', file_id=file.id) }}" method="POST" style="display: inline;">
+                                    <button type="submit" class="actions-btn">Recover</button>
+                                </form>
+                                <form action="{{ url_for('delete_permanently', file_id=file.id) }}" method="POST" style="display: inline;">
+                                    <button type="submit" class="actions-btn delete-btn">Delete Permanently</button>
+                                </form>
+                            </div>
+                        </td>
+                        
+                        
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="3">No deleted files found.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const actionsButtons = document.querySelectorAll('.actions-btn');
+
+        actionsButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.stopPropagation(); // Prevent propagation
+                const dropdown = button.nextElementSibling;
+
+                // Close other dropdowns
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    if (menu !== dropdown) {
+                        menu.classList.remove('show');
+                    }
+                });
+
+                // Toggle dropdown visibility
+                dropdown.classList.toggle('show');
+            });
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.classList.remove('show');
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
